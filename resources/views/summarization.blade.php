@@ -23,8 +23,8 @@
                         <div class="resp-tab-content hor_1 resp-tab-content-active" aria-labelledby="hor_1_tab_item-0"
                             style="display:block">
                             <p>Summarize PDF/DOCX and create</p>
-                            <button class="butn theme"
-                                onclick="event.preventDefault(); $('#staticBackdrop').show();">Start here</button>
+                            <button class="butn theme" onclick="event.preventDefault(); $('#staticBackdrop').show();"
+                                style="z-index: 1;">Start here</button>
                         </div>
 
 
@@ -46,7 +46,8 @@
                             <div class="form-group js-download-2" style="display: none; margin-top:20px;">
                                 <a target="_blank" id="js-download-file-2">Download PPT</a>
                             </div>
-                            <button class="butn theme" style="margin:10px 0;" onclick="create_slides_prompt();">Create
+                            <button class="butn theme" style="margin:10px 0; z-index: 1;"
+                                onclick="create_slides_prompt();">Create
                                 Slides</button>
                         </div>
                     </div>
@@ -56,7 +57,7 @@
     </div>
 
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        aria-labelledby="staticBackdropLabel" aria-hidden="true" style="background-color: #000000a6; !important;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: #2a8ae2; color:white;">
