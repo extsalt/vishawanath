@@ -742,3 +742,4 @@ Route::view('convert_to_ppt', 'convert_ppt');
 Route::view('summarization', 'summarization');
 
 Route::post('/create-slides', 'MainController@createSlides');
+Route::post('/create-slides-propmt', 'MainController@createSlidesFromPrompt');

@@ -29,11 +29,25 @@
 
 
                         <div class="resp-tab-content hor_1" aria-labelledby="hor_1_tab_item-1" style="display:none">
-                            <form action="">
-                                <textarea name="prompt" class="form-control" cols="30" rows="2"
-                                    placeholder="Enter your prompt"></textarea>
-                                <button class="butn theme" style="margin:10px 0;">Create Slides</button>
-                            </form>
+
+                            <textarea name="prompt" class="form-control js-text" cols="30" rows="2"
+                                placeholder="Enter your prompt"></textarea>
+
+                            <div class="form-group js-loader-2" style="display: none; margin-top: 20px;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group js-error-2-container" style="display: none; margin-top:20px;">
+                                <p class="js-error-2" style="color: red"></p>
+                            </div>
+
+                            <div class="form-group js-download-2" style="display: none; margin-top:20px;">
+                                <a target="_blank" id="js-download-file-2">Download PPT</a>
+                            </div>
+                            <button class="butn theme" style="margin:10px 0;" onclick="create_slides_prompt();">Create
+                                Slides</button>
                         </div>
                     </div>
                 </div>
@@ -112,6 +126,34 @@
             },
             complete: function () {
                 $('.js-loader-1').hide();
+            }
+        });
+    }
+
+    function create_slides_prompt() {
+        var formData = new FormData();
+        formData.append('prompt', $('.js-text').val());
+        $('.js-error-2-container').hide();
+        $('.js-download-2').hide();
+        $('.js-loader-2').show();
+        $.ajax({
+            type: "POST",
+            url: "/create-slides-propmt",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.file) {
+                    $('.js-download-2').show();
+                    document.getElementById('js-download-file-2').href = result.file;
+                }
+                if (result.message) {
+                    $('.js-error-2-container').show();
+                    $('.js-error-2').html(result.message);
+                }
+            },
+            complete: function () {
+                $('.js-loader-2').hide();
             }
         });
     }
