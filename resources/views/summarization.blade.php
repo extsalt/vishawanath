@@ -23,7 +23,8 @@
                         <div class="resp-tab-content hor_1 resp-tab-content-active" aria-labelledby="hor_1_tab_item-0"
                             style="display:block">
                             <p>Summarize PDF/DOCX and create</p>
-                            <button class="butn theme">Start here</button>
+                            <button class="butn theme"
+                                onclick="event.preventDefault(); $('#staticBackdrop').show();">Start here</button>
                         </div>
 
 
@@ -35,6 +36,35 @@
                             </form>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #2a8ae2; color:white;">
+                    <p class="modal-title fs-5" id="staticBackdropLabel">Summarize File</p>
+                </div>
+                <div class="modal-body">
+                    <form action="" class="form-inline">
+                        <div class="form-group mb-2">
+                            <label for="">Choose File</label>
+                            <input type="file" name="file" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Page Range</label>
+                            <input type="text" name="file" placeholder="1, 2-4" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="justify-content: space-between">
+                    <button type="button" class="butn theme" data-bs-dismiss="modal"
+                        onclick="$('#staticBackdrop').hide();">Create Slides</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        onclick="$('#staticBackdrop').hide();">Close</button>
                 </div>
             </div>
         </div>
