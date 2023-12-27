@@ -49,20 +49,34 @@
                     <p class="modal-title fs-5" id="staticBackdropLabel">Summarize File</p>
                 </div>
                 <div class="modal-body">
-                    <form action="" class="form-inline">
+                    <form action="" class="form-inline js-file-form">
                         <div class="form-group mb-2">
                             <label for="">Choose File</label>
-                            <input type="file" name="file" class="form-control">
+                            <input type="file" name="file" id="slide_file" class="form-control js-file">
                         </div>
                         <div class="form-group">
                             <label for="">Page Range</label>
-                            <input type="text" name="file" placeholder="1, 2-4" class="form-control">
+                            <input type="text" name="page_range" placeholder="1, 2-4"
+                                class="form-control js-page-range">
+                        </div>
+                        <div class="form-group js-loader-1" style="display: none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group js-error-1-container" style="display: none">
+                            <p class="js-error-1" style="color: red"></p>
+                        </div>
+
+                        <div class="form-group js-download-1" style="display: none">
+                            <a target="_blank" id="js-download-file-1">Download PPT</a>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="justify-content: space-between">
-                    <button type="button" class="butn theme" data-bs-dismiss="modal"
-                        onclick="$('#staticBackdrop').hide();">Create Slides</button>
+                    <button type="button" class="butn theme" data-bs-dismiss="modal" onclick="createSlides();">Create
+                        Slides</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                         onclick="$('#staticBackdrop').hide();">Close</button>
                 </div>
@@ -70,4 +84,37 @@
         </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+    function createSlides() {
+        var formData = new FormData();
+        formData.append('file', document.getElementById('slide_file').files[0]);
+        formData.append('page_range', $('.js-page-range').val());
+        $('.js-error-1-container').hide();
+        $('.js-download-1').hide();
+        $('.js-loader-1').show();
+        $.ajax({
+            type: "POST",
+            url: "/create-slides",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result.file) {
+                    $('.js-download-1').show();
+                    document.getElementById('js-download-file-1').href = result.file;
+                }
+                if (result.message) {
+                    $('.js-error-1-container').show();
+                    $('.js-error-1').html(result.message);
+                }
+            },
+            complete: function () {
+                $('.js-loader-1').hide();
+            }
+        });
+    }
+</script>
+@endpush
 @endsection

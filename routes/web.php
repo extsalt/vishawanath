@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-Use App\Order;
-Use App\aiuse;
+use App\Order;
+use App\aiuse;
 
 /* Use Session; */
 /*
@@ -20,18 +21,17 @@ Use App\aiuse;
 
 
 Route::get('/', function () {
-	if (Auth::check())
-	{
+    if (Auth::check()) {
         // echo Auth::id();
         // die(Auth::id());
         // $numofai = aiuse::where('user_id',Auth::id())->first();
-        $numofai = aiuse::where('user_id',Auth::id())->count();
-        if ($numofai==0){
-            $inputs = ['user_id' => Auth::id(),'numberofuses' => '0'];
+        $numofai = aiuse::where('user_id', Auth::id())->count();
+        if ($numofai == 0) {
+            $inputs = ['user_id' => Auth::id(), 'numberofuses' => '0'];
             aiuse::create($inputs);
 
         }
-        $numofai = aiuse::where('user_id',Auth::id())->first()->numberofuses;
+        $numofai = aiuse::where('user_id', Auth::id())->first()->numberofuses;
 
         // echo "ss";
         // print_r($numofai) ;
@@ -39,30 +39,30 @@ Route::get('/', function () {
 
         $validate = "";
 
-        $orders = Order::where('auth_id',Auth::id())->orderBy('created_at','DESC')->first();
+        $orders = Order::where('auth_id', Auth::id())->orderBy('created_at', 'DESC')->first();
 
-        if(@$orders->trial_account_status == "inprogress"){
+        if (@$orders->trial_account_status == "inprogress") {
 
             $validate = "yes";
 
-            $trail_start_date =  date('Y-m-d',strtotime($orders->trial_account_date));
+            $trail_start_date = date('Y-m-d', strtotime($orders->trial_account_date));
             $trail_end_date = date('Y-m-d');
             // $trail_end_date = "2021-06-23";
-            $date1=date_create($trail_start_date);
-            $date2=date_create($trail_end_date);
-            $diff=date_diff($date1,$date2);
+            $date1 = date_create($trail_start_date);
+            $date2 = date_create($trail_end_date);
+            $diff = date_diff($date1, $date2);
             $betweendate = $diff->format("%a");
 
 
-            if($betweendate <= $orders->trial_account_days){ //30days checking
+            if ($betweendate <= $orders->trial_account_days) { //30days checking
                 $validate = "yes";
 
-                $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
 
                 $user_signed_in = true;
 
-            }else{
+            } else {
 
                 $validate = "yes";
 
@@ -71,23 +71,23 @@ Route::get('/', function () {
                 $order_update->trail_finish_date = date('Y-m-d');
                 $order_update->save();
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
+                $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
                 $buy_end_date = date('Y-m-d');
                 // $buy_end_date = "2021-05-22";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
+                $date1 = date_create($buy_start_date);
+                $date2 = date_create($buy_end_date);
+                $diff = date_diff($date1, $date2);
                 $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_date){ //30days checking
+                if ($betweendate <= $orders->buy_account_date) { //30days checking
 
                     // $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $text_limit=50000;
+                    $text_limit = 50000;
 
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                    $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
                     $user_signed_in = true;
 
-                }else{
+                } else {
                     $validate = "yes";
                     $order_update = Order::find($orders->id);
                     $order_update->buy_account_status = "completed";
@@ -95,87 +95,84 @@ Route::get('/', function () {
                     $order_update->save();
 
                     // $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $text_limit=50000;
+                    $text_limit = 50000;
 
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
                     $user_signed_in = false;
-                 }
+                }
 
             }
 
-        }else if(@$orders->buy_account_status == "inprogress"){
+        } else if (@$orders->buy_account_status == "inprogress") {
 
 
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
-                $buy_end_date = date('Y-m-d');
-                // $buy_end_date = "2021-06-23";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
-                $betweendate = $diff->format("%a");
+            $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
+            $buy_end_date = date('Y-m-d');
+            // $buy_end_date = "2021-06-23";
+            $date1 = date_create($buy_start_date);
+            $date2 = date_create($buy_end_date);
+            $diff = date_diff($date1, $date2);
+            $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_days){ //30days checking
+            if ($betweendate <= $orders->buy_account_days) { //30days checking
 
-                    $validate = "yes";
+                $validate = "yes";
 
-                    // $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $text_limit=50000;
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
-                    $user_signed_in = true;
+                // $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
+                $text_limit = 50000;
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
+                $user_signed_in = true;
 
-                }else{
+            } else {
 
-                    $validate = "no";
+                $validate = "no";
 
-                    $order_update = Order::find($orders->id);
-                    $order_update->buy_account_status = "completed";
-                    $order_update->buy_finish_date = date('Y-m-d');
-                    $order_update->save();
+                $order_update = Order::find($orders->id);
+                $order_update->buy_account_status = "completed";
+                $order_update->buy_finish_date = date('Y-m-d');
+                $order_update->save();
 
-                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-                    $user_signed_in = false;
-                 }
+                $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+                $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+                $user_signed_in = false;
+            }
 
-        }else{
+        } else {
 
             $validate = "no";
 
-            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
             $user_signed_in = false;
         }
 
-    }
-	else
-	{
-        $numofai=1000;
+    } else {
+        $numofai = 1000;
         $validate = "no";
-		// $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-        $text_limit=3000;
-		$file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-		$user_signed_in = false;
+        // $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
+        $text_limit = 3000;
+        $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+        $user_signed_in = false;
     }
 
-    return view('welcome', ['text_char_limit' => $text_limit, 'file_upload_size' => $file_upload_size, 'user_signed_in'=>$user_signed_in, 'buy_validate' => $validate,'numofai'=>$numofai]);
+    return view('welcome', ['text_char_limit' => $text_limit, 'file_upload_size' => $file_upload_size, 'user_signed_in' => $user_signed_in, 'buy_validate' => $validate, 'numofai' => $numofai]);
     //return view('welcome');
 });
 
 //New page created n 16-11-2022
 Route::get('/abs_summary', function () {
-       if (Auth::check())
-       {
+    if (Auth::check()) {
         // echo Auth::id();
         // die(Auth::id());
         // $numofai = aiuse::where('user_id',Auth::id())->first();
-        $numofai = aiuse::where('user_id',Auth::id())->count();
-        if ($numofai==0){
-            $inputs = ['user_id' => Auth::id(),'numberofuses' => '0'];
+        $numofai = aiuse::where('user_id', Auth::id())->count();
+        if ($numofai == 0) {
+            $inputs = ['user_id' => Auth::id(), 'numberofuses' => '0'];
             aiuse::create($inputs);
 
         }
-        $numofai = aiuse::where('user_id',Auth::id())->first()->numberofuses;
+        $numofai = aiuse::where('user_id', Auth::id())->first()->numberofuses;
 
         // echo "ss";
         // print_r($numofai) ;
@@ -183,30 +180,30 @@ Route::get('/abs_summary', function () {
 
         $validate = "";
 
-        $orders = Order::where('auth_id',Auth::id())->orderBy('created_at','DESC')->first();
+        $orders = Order::where('auth_id', Auth::id())->orderBy('created_at', 'DESC')->first();
 
-        if(@$orders->trial_account_status == "inprogress"){
+        if (@$orders->trial_account_status == "inprogress") {
 
             $validate = "yes";
 
-            $trail_start_date =  date('Y-m-d',strtotime($orders->trial_account_date));
+            $trail_start_date = date('Y-m-d', strtotime($orders->trial_account_date));
             $trail_end_date = date('Y-m-d');
             // $trail_end_date = "2021-06-23";
-            $date1=date_create($trail_start_date);
-            $date2=date_create($trail_end_date);
-            $diff=date_diff($date1,$date2);
+            $date1 = date_create($trail_start_date);
+            $date2 = date_create($trail_end_date);
+            $diff = date_diff($date1, $date2);
             $betweendate = $diff->format("%a");
 
 
-            if($betweendate <= $orders->trial_account_days){ //30days checking
+            if ($betweendate <= $orders->trial_account_days) { //30days checking
                 $validate = "yes";
 
-                $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
 
                 $user_signed_in = true;
 
-            }else{
+            } else {
 
                 $validate = "yes";
 
@@ -215,23 +212,23 @@ Route::get('/abs_summary', function () {
                 $order_update->trail_finish_date = date('Y-m-d');
                 $order_update->save();
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
+                $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
                 $buy_end_date = date('Y-m-d');
                 // $buy_end_date = "2021-05-22";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
+                $date1 = date_create($buy_start_date);
+                $date2 = date_create($buy_end_date);
+                $diff = date_diff($date1, $date2);
                 $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_date){ //30days checking
+                if ($betweendate <= $orders->buy_account_date) { //30days checking
 
                     // $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $text_limit=50000;
+                    $text_limit = 50000;
 
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                    $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
                     $user_signed_in = true;
 
-                }else{
+                } else {
                     $validate = "yes";
                     $order_update = Order::find($orders->id);
                     $order_update->buy_account_status = "completed";
@@ -239,79 +236,77 @@ Route::get('/abs_summary', function () {
                     $order_update->save();
 
                     // $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $text_limit=50000;
+                    $text_limit = 50000;
 
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
                     $user_signed_in = false;
-                 }
+                }
 
             }
 
-        }else if(@$orders->buy_account_status == "inprogress"){
+        } else if (@$orders->buy_account_status == "inprogress") {
 
 
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
-                $buy_end_date = date('Y-m-d');
-                // $buy_end_date = "2021-06-23";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
-                $betweendate = $diff->format("%a");
+            $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
+            $buy_end_date = date('Y-m-d');
+            // $buy_end_date = "2021-06-23";
+            $date1 = date_create($buy_start_date);
+            $date2 = date_create($buy_end_date);
+            $diff = date_diff($date1, $date2);
+            $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_days){ //30days checking
+            if ($betweendate <= $orders->buy_account_days) { //30days checking
 
-                    $validate = "yes";
+                $validate = "yes";
 
-                    // $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $text_limit=50000;
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
-                    $user_signed_in = true;
+                // $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
+                $text_limit = 50000;
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
+                $user_signed_in = true;
 
-                }else{
+            } else {
 
-                    $validate = "no";
+                $validate = "no";
 
-                    $order_update = Order::find($orders->id);
-                    $order_update->buy_account_status = "completed";
-                    $order_update->buy_finish_date = date('Y-m-d');
-                    $order_update->save();
+                $order_update = Order::find($orders->id);
+                $order_update->buy_account_status = "completed";
+                $order_update->buy_finish_date = date('Y-m-d');
+                $order_update->save();
 
-                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-                    $user_signed_in = false;
-                 }
+                $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+                $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+                $user_signed_in = false;
+            }
 
-        }else{
+        } else {
 
             $validate = "no";
 
-            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
             $user_signed_in = false;
         }
 
-    }
-       else
-       {
-        $numofai=1000;
+    } else {
+        $numofai = 1000;
         $validate = "no";
-               // $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-        $text_limit=3000;
-               $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-               $user_signed_in = false;
+        // $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
+        $text_limit = 3000;
+        $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+        $user_signed_in = false;
     }
 
-    return view('newpage', ['text_char_limit' => $text_limit, 'file_upload_size' => $file_upload_size, 'user_signed_in'=>$user_signed_in, 'buy_validate' => $validate,'numofai'=>$numofai]);
+    return view('newpage', ['text_char_limit' => $text_limit, 'file_upload_size' => $file_upload_size, 'user_signed_in' => $user_signed_in, 'buy_validate' => $validate, 'numofai' => $numofai]);
     //return view('welcome');
 });
 
-Route::get('/socialregister','SocialController@socialregister');
-Route::post('/socialregisterpost','SocialController@socialregisterpost');
+Route::get('/socialregister', 'SocialController@socialregister');
+Route::post('/socialregisterpost', 'SocialController@socialregisterpost');
 Route::get('subscribe', 'HomeController@subscribe');
 Route::post('filterrecord', 'HomeController@filterrecord');
 
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
 });
@@ -350,33 +345,32 @@ Route::post('notify_keypoints', 'PayPalKeypointsController@notify_keypoints')->n
 Auth::routes(['verify' => true]);
 Route::get('/account', function () {
 
-	if (Auth::check())
-	{
+    if (Auth::check()) {
 
         $validate = "";
 
-        $orders = Order::where('auth_id',Auth::id())->orderBy('created_at','DESC')->first();
+        $orders = Order::where('auth_id', Auth::id())->orderBy('created_at', 'DESC')->first();
 
-        if(@$orders->trial_account_status == "inprogress"){
+        if (@$orders->trial_account_status == "inprogress") {
 
             $validate = "yes";
 
-            $trail_start_date =  date('Y-m-d',strtotime($orders->trial_account_date));
+            $trail_start_date = date('Y-m-d', strtotime($orders->trial_account_date));
             $trail_end_date = date('Y-m-d');
             // $trail_end_date = "2021-06-23";
-            $date1=date_create($trail_start_date);
-            $date2=date_create($trail_end_date);
-            $diff=date_diff($date1,$date2);
+            $date1 = date_create($trail_start_date);
+            $date2 = date_create($trail_end_date);
+            $diff = date_diff($date1, $date2);
             $betweendate = $diff->format("%a");
 
-            if($betweendate <= $orders->trial_account_days){ //30days checking
+            if ($betweendate <= $orders->trial_account_days) { //30days checking
                 $validate = "yes";
 
-                $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
                 $user_signed_in = true;
 
-            }else{
+            } else {
 
                 $validate = "yes";
 
@@ -385,100 +379,98 @@ Route::get('/account', function () {
                 $order_update->trail_finish_date = date('Y-m-d');
                 $order_update->save();
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
+                $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
                 $buy_end_date = date('Y-m-d');
                 // $buy_end_date = "2021-05-22";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
+                $date1 = date_create($buy_start_date);
+                $date2 = date_create($buy_end_date);
+                $diff = date_diff($date1, $date2);
                 $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_date){ //30days checking
+                if ($betweendate <= $orders->buy_account_date) { //30days checking
 
-                    $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                    $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                    $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
                     $user_signed_in = true;
 
-                }else{
+                } else {
                     $validate = "yes";
                     $order_update = Order::find($orders->id);
                     $order_update->buy_account_status = "completed";
                     $order_update->buy_finish_date = date('Y-m-d');
                     $order_update->save();
 
-                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
                     $user_signed_in = false;
-                 }
+                }
 
             }
 
-        }else if(@$orders->buy_account_status == "inprogress"){
+        } else if (@$orders->buy_account_status == "inprogress") {
 
 
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
-                $buy_end_date = date('Y-m-d');
-                // $buy_end_date = "2021-06-23";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
-                $betweendate = $diff->format("%a");
+            $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
+            $buy_end_date = date('Y-m-d');
+            // $buy_end_date = "2021-06-23";
+            $date1 = date_create($buy_start_date);
+            $date2 = date_create($buy_end_date);
+            $diff = date_diff($date1, $date2);
+            $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_days){ //30days checking
+            if ($betweendate <= $orders->buy_account_days) { //30days checking
 
-                    $validate = "yes";
+                $validate = "yes";
 
-                    $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
-                    $user_signed_in = true;
+                $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
+                $user_signed_in = true;
 
-                }else{
+            } else {
 
-                    $validate = "no";
+                $validate = "no";
 
-                    $order_update = Order::find($orders->id);
-                    $order_update->buy_account_status = "completed";
-                    $order_update->buy_finish_date = date('Y-m-d');
-                    $order_update->save();
+                $order_update = Order::find($orders->id);
+                $order_update->buy_account_status = "completed";
+                $order_update->buy_finish_date = date('Y-m-d');
+                $order_update->save();
 
-                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-                    $user_signed_in = false;
-                 }
+                $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+                $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+                $user_signed_in = false;
+            }
 
-        }else{
+        } else {
 
             $validate = "no";
 
-            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
             $user_signed_in = false;
         }
 
-    }
-	else
-	{
+    } else {
 
         $validate = "no";
-		$text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-		$file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-		$user_signed_in = false;
+        $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+        $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+        $user_signed_in = false;
     }
 
 
-    $orders = Order::where('auth_id',Auth::id())->orderBy('id','DESC')->first();
+    $orders = Order::where('auth_id', Auth::id())->orderBy('id', 'DESC')->first();
     // dd($orders->toArray());
-    $orderscount = Order::where('auth_id',Auth::id())->count();
-    $trails = Order::where('auth_id',Auth::id())->orderBy('trial_account_date','DESC')->first();
+    $orderscount = Order::where('auth_id', Auth::id())->count();
+    $trails = Order::where('auth_id', Auth::id())->orderBy('trial_account_date', 'DESC')->first();
 
-    if(!empty($orders->id)){
+    if (!empty($orders->id)) {
         $validate = "no";
-    }else{
+    } else {
         $validate = "buy_need";
     }
 
-    return view('account',compact('orders','trails','validate','orderscount'));
+    return view('account', compact('orders', 'trails', 'validate', 'orderscount'));
 
 });
 
@@ -486,33 +478,32 @@ Route::get('/account', function () {
 
 Route::get('account_keypoints', function () {
 
-    if (Auth::check())
-    {
+    if (Auth::check()) {
 
         $validate = "";
 
-        $orders = Order::where('auth_id',Auth::id())->orderBy('created_at','DESC')->first();
+        $orders = Order::where('auth_id', Auth::id())->orderBy('created_at', 'DESC')->first();
 
-        if(@$orders->trial_account_status == "inprogress"){
+        if (@$orders->trial_account_status == "inprogress") {
 
             $validate = "yes";
 
-            $trail_start_date =  date('Y-m-d',strtotime($orders->trial_account_date));
+            $trail_start_date = date('Y-m-d', strtotime($orders->trial_account_date));
             $trail_end_date = date('Y-m-d');
             // $trail_end_date = "2021-06-23";
-            $date1=date_create($trail_start_date);
-            $date2=date_create($trail_end_date);
-            $diff=date_diff($date1,$date2);
+            $date1 = date_create($trail_start_date);
+            $date2 = date_create($trail_end_date);
+            $diff = date_diff($date1, $date2);
             $betweendate = $diff->format("%a");
 
-            if($betweendate <= $orders->trial_account_days){ //30days checking
+            if ($betweendate <= $orders->trial_account_days) { //30days checking
                 $validate = "yes";
 
-                $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
                 $user_signed_in = true;
 
-            }else{
+            } else {
 
                 $validate = "yes";
 
@@ -521,150 +512,148 @@ Route::get('account_keypoints', function () {
                 $order_update->trail_finish_date = date('Y-m-d');
                 $order_update->save();
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
+                $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
                 $buy_end_date = date('Y-m-d');
                 // $buy_end_date = "2021-05-22";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
+                $date1 = date_create($buy_start_date);
+                $date2 = date_create($buy_end_date);
+                $diff = date_diff($date1, $date2);
                 $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_date){ //30days checking
+                if ($betweendate <= $orders->buy_account_date) { //30days checking
 
-                    $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
+                    $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                    $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
                     $user_signed_in = true;
 
-                }else{
+                } else {
                     $validate = "yes";
                     $order_update = Order::find($orders->id);
                     $order_update->buy_account_status = "completed";
                     $order_update->buy_finish_date = date('Y-m-d');
                     $order_update->save();
 
-                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
                     $user_signed_in = false;
-                 }
+                }
 
             }
 
-        }else if(@$orders->buy_account_status == "inprogress"){
+        } else if (@$orders->buy_account_status == "inprogress") {
 
 
 
-                $buy_start_date =  date('Y-m-d',strtotime($orders->buy_account_date));
-                $buy_end_date = date('Y-m-d');
-                // $buy_end_date = "2021-06-23";
-                $date1=date_create($buy_start_date);
-                $date2=date_create($buy_end_date);
-                $diff=date_diff($date1,$date2);
-                $betweendate = $diff->format("%a");
+            $buy_start_date = date('Y-m-d', strtotime($orders->buy_account_date));
+            $buy_end_date = date('Y-m-d');
+            // $buy_end_date = "2021-06-23";
+            $date1 = date_create($buy_start_date);
+            $date2 = date_create($buy_end_date);
+            $diff = date_diff($date1, $date2);
+            $betweendate = $diff->format("%a");
 
-                if($betweendate <= $orders->buy_account_days){ //30days checking
+            if ($betweendate <= $orders->buy_account_days) { //30days checking
 
-                    $validate = "yes";
+                $validate = "yes";
 
-                    $text_limit = env('REGISTER_USER_TEXT_LIMIT',10000);
-                    $file_upload_size = env('REGISTER_USER_FILE_SIZE',5000000);
-                    $user_signed_in = true;
+                $text_limit = env('REGISTER_USER_TEXT_LIMIT', 10000);
+                $file_upload_size = env('REGISTER_USER_FILE_SIZE', 5000000);
+                $user_signed_in = true;
 
-                }else{
+            } else {
 
-                    $validate = "no";
+                $validate = "no";
 
-                    $order_update = Order::find($orders->id);
-                    $order_update->buy_account_status = "completed";
-                    $order_update->buy_finish_date = date('Y-m-d');
-                    $order_update->save();
+                $order_update = Order::find($orders->id);
+                $order_update->buy_account_status = "completed";
+                $order_update->buy_finish_date = date('Y-m-d');
+                $order_update->save();
 
-                    $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-                    $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
-                    $user_signed_in = false;
-                 }
+                $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+                $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
+                $user_signed_in = false;
+            }
 
-        }else{
+        } else {
 
             $validate = "no";
 
-            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+            $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+            $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
             $user_signed_in = false;
         }
 
-    }
-    else
-    {
+    } else {
 
         $validate = "no";
-        $text_limit = env('UNREGISTER_USER_TEXT_LIMIT',3000);
-        $file_upload_size = env('UNREGISTER_USER_FILE_SIZE',1000000);
+        $text_limit = env('UNREGISTER_USER_TEXT_LIMIT', 3000);
+        $file_upload_size = env('UNREGISTER_USER_FILE_SIZE', 1000000);
         $user_signed_in = false;
     }
 
     $auth = Auth::id();
-    $orders = Order::where('auth_id',Auth::id())->orderBy('id','DESC')->first();
+    $orders = Order::where('auth_id', Auth::id())->orderBy('id', 'DESC')->first();
     // dd($orders->toArray());
-    $orderscount = Order::where('auth_id',Auth::id())->count();
-    $trails = Order::where('auth_id',Auth::id())->orderBy('trial_account_date','DESC')->first();
+    $orderscount = Order::where('auth_id', Auth::id())->count();
+    $trails = Order::where('auth_id', Auth::id())->orderBy('trial_account_date', 'DESC')->first();
 
-    if(!empty($orders->id)){
+    if (!empty($orders->id)) {
         $validate = "no";
-    }else{
+    } else {
         $validate = "buy_need";
     }
 
-    return view('account_keypoints',compact('orders','trails','validate','orderscount'));
+    return view('account_keypoints', compact('orders', 'trails', 'validate', 'orderscount'));
 
 });
 
 Route::get('/makesession', function (Request $request) {
-	Session::forget('fkey');
-	if($request->fkey=='1'){
-		Session::put('fkey',1);
-	}else{
-		Session::put('fkey',2);
-	}
-	Session::save();
+    Session::forget('fkey');
+    if ($request->fkey == '1') {
+        Session::put('fkey', 1);
+    } else {
+        Session::put('fkey', 2);
+    }
+    Session::save();
 });
 
 Route::get('/refund', function () {
-	return view('refund');
+    return view('refund');
 });
 
 Route::get('/terms', function () {
-	return view('terms');
+    return view('terms');
 });
 
 Route::get('/privacy', function () {
-	return view('privacy');
+    return view('privacy');
 });
 
 Route::get('/about', function () {
-	return view('about');
+    return view('about');
 });
 
 Route::get('/terms-keypoints', function () {
-	return view('terms-keypoints');
+    return view('terms-keypoints');
 });
 
 Route::get('/privacy-keypoints', function () {
-	return view('privacy-keypoints');
+    return view('privacy-keypoints');
 });
 
 Route::get('/demo', function () {
-	return view('demo');
+    return view('demo');
 });
 
 Route::get('/aihuman', function () {
-	return view('aihuman');
+    return view('aihuman');
 });
 
 Route::get('/keypoints', function () {
-        return view('layouts.keypoints');
+    return view('layouts.keypoints');
 });
 Route::get('/keypointsdev', function () {
-        return view('layouts.keypointsDev');
+    return view('layouts.keypointsDev');
 });
 
 Route::post('/payment_checks', function (Request $request) {
@@ -697,25 +686,23 @@ Route::get('admin/home', 'HomeController@handleAdmin')->name('admin.route')->mid
 Route::get('admin/users_export', 'HomeController@exportUsers')->middleware('admin');
 
 /*Contact Us email*/
-Route::post('/contactus', function (Request $request)
-{
-	$send_email_to = env('MAIL_USERNAME','info@intellippt.com');
+Route::post('/contactus', function (Request $request) {
+    $send_email_to = env('MAIL_USERNAME', 'info@intellippt.com');
 
-	$output = [];
-	$output['message'] = '';
+    $output = [];
+    $output['message'] = '';
 
-	$recaptcha = $request->input('recaptcha');
-	$name = $request->input('name');
-	$email = $request->input('email');
-	$message = $request->input('message');
+    $recaptcha = $request->input('recaptcha');
+    $name = $request->input('name');
+    $email = $request->input('email');
+    $message = $request->input('message');
 
-	if ($name=='' || $email == '' || $message == '' || $recaptcha=='')
-	{
-		$output['message'] = "Fill in all details.";
+    if ($name == '' || $email == '' || $message == '' || $recaptcha == '') {
+        $output['message'] = "Fill in all details.";
         return response()->json($output, 401);
-	}
+    }
 
-	$client = new Client([
+    $client = new Client([
         'base_uri' => 'https://google.com/recaptcha/api/'
     ]);
 
@@ -727,25 +714,22 @@ Route::post('/contactus', function (Request $request)
     ]);
 
     $gresponse = json_decode($response->getBody());
-    Log::info('captacha response : '.json_encode($gresponse));
+    Log::info('captacha response : ' . json_encode($gresponse));
 
-    if ($gresponse->success)
-    {
-    	$details = [
-	        'title' => 'Mail from intellippt.com',
-	        'name' => $name,
-	        'email' => $email,
-	        'message' => $message
-	    ];
+    if ($gresponse->success) {
+        $details = [
+            'title' => 'Mail from intellippt.com',
+            'name' => $name,
+            'email' => $email,
+            'message' => $message
+        ];
 
-	    \Mail::to($send_email_to)->send(new \App\Mail\ContactsUs($details));
+        \Mail::to($send_email_to)->send(new \App\Mail\ContactsUs($details));
 
-	    $output['message'] = "We will get back to you shortly.";
+        $output['message'] = "We will get back to you shortly.";
         return response()->json($output, 200);
-    }
-    else
-    {
-    	$output['message'] = "Google recaptcha failed. Please try again by refreshing the page.";
+    } else {
+        $output['message'] = "Google recaptcha failed. Please try again by refreshing the page.";
         return response()->json($output, 401);
     }
 });
@@ -756,3 +740,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::view('convert_to_ppt', 'convert_ppt');
 Route::view('summarization', 'summarization');
+
+Route::post('/create-slides', 'MainController@createSlides');
