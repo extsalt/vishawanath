@@ -22,8 +22,17 @@
                     <div class="resp-tabs-container hor_1">
                         <div class="resp-tab-content hor_1 resp-tab-content-active" aria-labelledby="hor_1_tab_item-0"
                             style="display:block">
+                            <h4>Summarize PDF/DOCX and create</h4>
+                            <button class="butn theme">Start here</button>
                         </div>
+
+
                         <div class="resp-tab-content hor_1" aria-labelledby="hor_1_tab_item-1" style="display:none">
+                            <form action="">
+                                <textarea name="prompt" id="" cols="30" rows="10"
+                                    placeholder="Enter your text"></textarea>
+                                <button class="butn theme">Create Slides</button>
+                            </form>
                         </div>
                     </div>
                 </div>
