@@ -17,7 +17,7 @@
                     <ul class="resp-tabs-list hor_1">
                         <li class="resp-tab-item hor_1 resp-tab-active" aria-controls="hor_1_tab_item-0" role="tab">
                             </i> File</li>
-                        <li class="resp-tab-item hor_1" aria-controls="hor_1_tab_item-1" role="tab">Text</li>
+                        <li class="resp-tab-item hor_1" aria-controls="hor_1_tab_item-1" role="tab">Prompt</li>
                     </ul>
                     <div class="resp-tabs-container hor_1">
                         <div class="resp-tab-content hor_1 resp-tab-content-active" aria-labelledby="hor_1_tab_item-0"
