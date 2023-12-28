@@ -24,7 +24,7 @@
                             style="display:block">
                             <p>Summarize PDF/DOCX and create</p>
                             <button class="butn theme" onclick="event.preventDefault(); $('#staticBackdrop').show();"
-                                style="z-index: 1;">Start here</button>
+                                style="z-index: 1;">Create Slides</button>
                         </div>
 
 
