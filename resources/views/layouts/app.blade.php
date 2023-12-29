@@ -276,7 +276,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                     <ul class="navbar-nav ml-auto" id="nav" style="display: none;">
                                         <li><a href="/">Home</a></li>
                                         <!--<li><a href="/keypoints">KeyPoints Add-On</a></li>-->
-                                        <li><a href="/#convert_to_ppt">Convert to PPT</a></li>
+                                        <li><a href="/convert_to_ppt1">Convert to PPT</a></li>
                                         <li><a href="/summarization">Summarizer</a></li>
                                         <li><a href="/#features">Features</a></li>
                                         <li><a href="/#pricing">Pricing</a></li>

@@ -739,6 +739,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::view('convert_to_ppt', 'convert_ppt');
+Route::view('convert_to_ppt1', 'create_ppt1');
 Route::view('summarization', 'summarization');
 
 Route::post('/create-slides', 'MainController@createSlides');
